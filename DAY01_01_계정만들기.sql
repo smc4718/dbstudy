@@ -34,8 +34,8 @@
 
 -- DROP USER C##GD;
 
--- 새로운 계정을 만드는 전체 스크립트
+-- 새로운 계정을 만드는 전체 스크립트 (초기화)
 ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
-DROP USER GD CASCADE;
+DROP USER GD CASCADE;                       -- 객체가 있는 사용자는 CASCADE; 가 있어야 지울 수 있다.
 CREATE USER GD IDENTIFIED BY 1111;
 GRANT DBA TO GD;
