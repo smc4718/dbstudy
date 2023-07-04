@@ -2,7 +2,7 @@
     DML
     1. Data Manipulation Language
     2. 데이터(행, Row)를 조작(삽입, 수정, 삭제)하는 언어이다.
-    3. 트랜잭션 대상이다. (작업이 완료되면 COMMIT, 작업을 취소하려면 ROLLBACK 이 필요하다.)
+    3. 트랜잭션 대상이다. (작업이 완료되면 COMMIT 이 필요하다, 작업을 취소하려면 ROLLBACK 이 필요하다.)
         1) COMMIT   : 작업을 저장한다. COMMIT 이 완료된 작업은 취소할 수 없다. 정확하게는 ROLLBACK 으로 취소할 수 없다.
         2) ROLLBACK : 작업을 취소한다. COMMIT 한 이후에 했던 작업을 취소한다.
     4. 종류
@@ -47,15 +47,15 @@ CREATE SEQUENCE DEPT_SEQ
     NOMAXVALUE     -- 번호에 상한선이 없다. (디폴트)
     NOMINVALUE     -- 번호에 하한선이 없다. (디폴트)
     NOCYCLE        -- 번호 순환이 없다. (디폴트)
-    CACHE 20       -- 20개씩 번호를 미리 만들어 둔다.  (디폴트)
+    CACHE 20       -- 20개씩 번호를 미리 만들어 둔다.  (디폴트)  - 미리 뽑아놓는 이유는 더 빠른 성능 때문이다.
     NOORDER        -- 번호를 순서대로 사용하지 않는다. (디폴트) , 번호를 순서대로 사용하는 'ORDER' 옵션으로 바꿔서 시퀀스를 생성한다.
-;
+;   --ORDER; 라고 적으면 위에 것들이 다 기본 값이라고 생각하면 된다. 
 */
 DROP SEQUENCE DEPT_SEQ; --시퀀스도 테이블처럼 작업할 때 DROP 부터 적어준다.
 CREATE SEQUENCE DEPT_SEQ ORDER;  --번호를 뽑는 기계
 
 
-INSERT INTO DEPARTMENT_T(DEPT_NO,DEPT_NAME, LOCATION) VALUES(DEPT_SEQ.NEXTVAL, '영업부', '대구'); --기계에서 번호를 빼는 게 NEXTVALUE 의 줄임말 : NEXTVAL.
+INSERT INTO DEPARTMENT_T(DEPT_NO,DEPT_NAME, LOCATION) VALUES(DEPT_SEQ.NEXTVAL, '영업부', '대구'); --기계에서 번호를 빼는 게 NEXTVALUE 의 줄임말 : 시퀀스명.NEXTVAL
 INSERT INTO DEPARTMENT_T(DEPT_NO,DEPT_NAME, LOCATION) VALUES(DEPT_SEQ.NEXTVAL, '인사부', '서울');
 INSERT INTO DEPARTMENT_T(DEPT_NO,DEPT_NAME, LOCATION) VALUES(DEPT_SEQ.NEXTVAL, '총무부', '대구');
 INSERT INTO DEPARTMENT_T(DEPT_NO,DEPT_NAME, LOCATION) VALUES(DEPT_SEQ.NEXTVAL, '기획부', '서울');
@@ -79,6 +79,70 @@ COMMIT;
 
 -- 가장 최근 작업을 취소하려면 ROLLBACK; 적으면 됨. (★커밋을 취소하는 것이 아니라 마지막 커밋 이후에 했던 작업들을 취소하는 것이 '롤백'★)
 -- 커밋취소(커밋을 했다는 건 성공한 것인데, 예를 들어 회원가입했는데 커밋을 취소하면 회원들이 탈퇴된다.) , 취소할 일이 없음. 
+
+
+
+--<수정>
+/*  UPDATE절 , SET절, WHERE절 이라고 부름. 3가지가 함께 감.
+
+    UPDATE 테이블
+    SET 업데이트할내용, 업데이트할내용, ...
+    WHERE 조건
+*/
+
+--1.부서번호가 3인 부서의 지역을 '인천'으로 변경하시오. (시퀀스에서 3번째로 번호를 뽑은 줄이 부서번호3, 위 표에서는 '총무부 대구')
+UPDATE DEPARTMENT_T
+   SET LOCATION = '인천'         -- 지역이 저장된 칼럼 이름은 LOCATION, 지역 이름이 '인천'으로 바뀜. / SET절의 등호(=)는 대입연산자이다. : 오른쪽 데이터를 왼쪽으로 보내주세요 라는 뜻.
+ WHERE DEPT_NO = 3;              -- WHERE절의 등호(=)는 동등비교연산자이다. 정말 값이 같은지 확인한다는 뜻 .
+--항상 쿼리문의 라인을 일렬로 맞춰주자.
+--'0행이 업데이트되었다'고 나오면 업데이트 실패.
+--커밋을 안했을 때는 업데이트했어도 취소 가능.
+
+-- 2. 부서번호가 2인 부서에 근무하는 모든 사원들의 연봉을 500000 증가시켜보자.
+UPDATE EMPLOYEE_T
+   SET SALARY = SALARY + 500000          --SET절의 대입연산자는 오른쪽 값을 처리하고 왼쪽으로 보낸다.
+ WHERE DEPART = 2;
+ 
+ 
+ 
+--<삭제> 아래 3가지가 함께 감.
+/*
+  DELETE
+    FROM 테이블이름
+   WHERE 조건식
+*/
+--1.지역이 '인천'인 부서를 삭제하시오. (인천에 근무하는 사원이 없는 상황.)
+DELETE
+  FROM DEPARTMENT_T
+ WHERE LOCATION = '인천';
+ 
+--2. 지역이 '서울'인 부서를 삭제하시오. (서울에 근무하는 사원이 있는 상황 -> ON DELETE SET NULL 옵션에 의해서 부서정보가 NULL 처리 된다. 실제로는 'null'이라고 써있지x 빈칸으로 되어있다.)
+DELETE                                                                        -- ㄴ외래키에 '삭제 옵션'을 안 넣는다면 삭제가 안 된다.(에러남)  // CASCADE는 서울이 지워지면 사원도 다 삭제시킨다.
+  FROM DEPARTMENT_T
+ WHERE LOCATION = '서울';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
