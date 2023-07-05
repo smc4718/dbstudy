@@ -2,9 +2,12 @@
 SELECT ABS(-5)  -- -5의 절대값   (절대값을 쓰는 예제 : 좋아요, 싫어요 갯수) , ABS : Absolute Numbers
   FROM DUAL; 
 
+
+
 -- 2. 제곱근(루트)
 SELECT SQRT(25)  -- 루트 25 는 5
   FROM DUAL;
+
 
 -- 3. 부호 판별  (숫자 앞에 +인지, -인지, 0인지 판별)
 SELECT SIGN(5)   -- 양수는  1
