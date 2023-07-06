@@ -10,7 +10,6 @@ SELECT 1+1 FROM DUAL;
 CREATE SEQUENCE TEST_SEQ ORDER;
 SELECT TEST_SEQ.NEXTVAL FROM DUAL;
 
-
 /*
     DUAL 테이블
     1. DUMMY 칼럼 1개를 가지고 있는 테이블이다.
@@ -42,6 +41,7 @@ SELECT TO_CHAR(1234)
      , TO_CHAR(12345, '99,999')  -- 12,345
   FROM  DUAL;
   
+
 --*함수는 이해만 하고 가자 , 암기X
 
 
@@ -108,8 +108,6 @@ SELECT *
   FROM EXAMPLE_T
  WHERE TO_DATE(DT1, 'YY/MM/DD') = TO_DATE('23/07/04', 'YY/MM/DD')
  --★날짜 DATE는 비교할 때 'TO_DATE' 를 그냥 다 넣기.
-       
-
 
         
         

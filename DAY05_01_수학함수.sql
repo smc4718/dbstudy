@@ -3,7 +3,6 @@ SELECT ABS(-5)  -- -5의 절대값   (절대값을 쓰는 예제 : 좋아요, �
   FROM DUAL; 
 
 
-
 -- 2. 제곱근(루트)
 SELECT SQRT(25)  -- 루트 25 는 5
   FROM DUAL;
@@ -18,7 +17,7 @@ SELECT SIGN(5)   -- 양수는  1
 -- 4. 제곱  (2의 10제곱까지 외워두면 좋음, 실제 많이 사용함)   '2 byte = 16 bit가 2의 16제곱임'
 SELECT POWER(2,10)  -- 2의 10제곱 : 1024
   FROM DUAL;
-  
+
 -- 5. 나머지
 SELECT MOD(5,3)   -- 5를 3으로 나눈 나머지 : 2    '값을 순환시킬 때 나머지가 많이 쓰인다. EX)시계:날짜,시간
   FROM DUAL;
